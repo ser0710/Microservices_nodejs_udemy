@@ -1,0 +1,9 @@
+# Ejemplo de como crear un pod de una unica imagen (debe tener como extension yaml)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: posts
+spec:
+  containers: 
+    - name: posts
+      image: post_service:0.0.1
