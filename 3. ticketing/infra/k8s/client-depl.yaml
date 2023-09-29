@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-tic-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client-tic
+  template:
+    metadata:
+      labels:
+        app: client-tic
+    spec:
+      containers:
+        - name: client-tic
+          image: ser0710/client-tic
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-tic-srv
+spec:
+  selector:
+    app: client-tic
+  ports:
+    - name: client-tic
+      protocol: TCP
+      port: 3000
+      targetPort: 3000 
