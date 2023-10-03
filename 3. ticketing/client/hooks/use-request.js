@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 const use_request = ({ url, method, body, onSuccess }) => {
     const [errors, setErrors] = useState(null);
-
     const doRequest = async () => {
         try{
             setErrors(null);
