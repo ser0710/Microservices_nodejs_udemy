@@ -7,6 +7,9 @@ import cors from 'cors';
 import { errorHandler, NotFoundError, currentUser } from "@ser0710_tic/common";
 
 import { createTicketRouter } from "./routes/new";
+import { showTicketRouter } from "./routes/show";
+import { indexTicketRouter } from "./routes/index";
+import { updateTicketRouter } from "./routes/update";
 
 const app = express();
 app.use(cors());
@@ -17,8 +20,12 @@ app.use(cookieSession({
     secure: process.env.NODE_ENV !== 'test'
 }));
 
-app.use(createTicketRouter)
 app.use(currentUser)
+
+app.use(createTicketRouter)
+app.use(showTicketRouter)
+app.use(indexTicketRouter)
+app.use(updateTicketRouter)
 
 
 app.use(errorHandler);

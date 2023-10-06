@@ -1,10 +1,27 @@
+import { body } from 'express-validator'
 import express, {Request, Response} from 'express';
-import { requireAuth } from '@ser0710_tic/common';
+import { requireAuth, validateRequest } from '@ser0710_tic/common';
+import { Ticket } from '../modules/ticket';
 
 const router = express.Router();
 
-router.post('/api/tickets', requireAuth, (req: Request, res: Response) => {
-    res.sendStatus(200);
+router.post('/api/tickets', requireAuth, [
+    body('title')
+        .not()
+        .isEmpty()
+        .withMessage('Title is required'),
+    body('price')
+        .isFloat({ gt: 0 })
+        .withMessage('price must be grater than 0')
+], validateRequest, async (req: Request, res: Response) => {
+    const { tittle, price } = req.body;
+    const ticket = Ticket.build({
+        tittle,
+        price,
+        userId: req.currentUser!.id
+    })
+    await ticket.save();
+    res.status(201).send(ticket);
 });
 
 export { router as createTicketRouter }
