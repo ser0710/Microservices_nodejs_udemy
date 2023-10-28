@@ -1,0 +1,7 @@
+npm install
+
+docker build --tag ser0710/orders .
+
+npm update @ser0710_tic/common
+
+npm install mongoose-update-if-current

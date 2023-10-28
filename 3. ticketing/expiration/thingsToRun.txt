@@ -1,0 +1,7 @@
+npm install bull @types/bull
+
+npm install
+
+docker build --tag ser0710/expiration .
+
+docker push ser0710/expiration

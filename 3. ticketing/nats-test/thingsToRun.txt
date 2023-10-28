@@ -1,0 +1,24 @@
+npm init -y
+npm install node-nats-streaming ts-node-dev typescript @types/node 
+
+* inside package.json
+inside scripts
+delete test 
+"publish" : "ts-node-dev --notify false src/publisher.ts"
+"listen" : "ts-node-dev --notify false src/listener.ts"
+
+tsc --init (en caso de error npm install -g typescript y rerun)
+
+
+list of pods (kubectl get pods)
+copy the name of nats-depl
+kubectl port-forward "name" 4222:4222 (the first port, local machine, the second port, port on the pod) this will allow the line 4 in publisher
+
+add this to restart the instance
+
+"scripts": {
+  "publish": "ts-node-dev --rs --notify false src/publisher.ts",
+  "listen": "ts-node-dev --rs --notify false src/listener.ts"
+}
+
+to run services localy..? : npm run listen

@@ -1,7 +1,9 @@
 import express, {Request, Response} from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../modules/ticket';
-import { NotFoundError, validateRequest,requireAuth,notAuthorizedError } from '@ser0710_tic/common';
+import { NotFoundError, validateRequest,requireAuth,notAuthorizedError, BadRequestError } from '@ser0710_tic/common';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publihser';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -21,6 +23,11 @@ async (req:Request, res: Response) => {
     if(!ticket) {
         throw new NotFoundError();
     }
+
+    if(ticket.orderId){
+        throw new BadRequestError('cannot edit a reserved ticket');
+    }
+
     if(ticket.userId !== req.currentUser!.id){
         throw new notAuthorizedError();
     }
@@ -31,6 +38,13 @@ async (req:Request, res: Response) => {
     });
 
     await ticket.save();
+    new TicketUpdatedPublisher(natsWrapper.client).publish({
+        id: ticket.id,
+        title: ticket.title,
+        price: ticket.price,
+        userId: ticket.userId,
+        version: ticket.version
+    })
 
     res.send(ticket);
 })

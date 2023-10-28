@@ -1,0 +1,11 @@
+docker build --tag ser0710/payments .
+
+docker push ser0710/payments
+
+npm install 
+
+npm install mongoose-update-if-current
+
+npm install stripe
+
+(go to stripe.com create an account find api key)

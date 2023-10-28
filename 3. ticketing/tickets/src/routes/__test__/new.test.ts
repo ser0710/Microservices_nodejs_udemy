@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../modules/ticket';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('has a route handler listening to /api/tickets for post requests', async () => {
     const response = await request(app)
@@ -24,7 +25,7 @@ it('return a status other than 401 if the user is signed in', async () => {
     expect(response.status).not.toEqual(401);
 })
 
-it('returns an error if an invalid tittle is provided', async () => {
+it('returns an error if an invalid title is provided', async () => {
     await request(app)
         .post('/api/tickets')
         .set('Cookie', signin())
@@ -57,7 +58,7 @@ it('returns an error if an invalid price is provided', async () => {
         .post('/api/tickets')
         .set('Cookie', signin())
         .send({
-            tittle: 'jknfkndsf'
+            title: 'jknfkndsf'
         })
         .expect(400); 
 })
@@ -66,13 +67,13 @@ it('creates a ticket with a valid inputs', async () => {
     // add a check to make sure a ticket was saved
     let tickets = await Ticket.find({});
     expect(tickets.length).toEqual(0);
-    const tittle = 'fjnndjk';
+    const title = 'fjnndjk';
 
     await request(app)
         .post('/api/tickets')
         .set('Cookie', signin())
         .send({
-            title: tittle,
+            title: title,
             price: 20
         })
         .expect(201);
@@ -80,5 +81,19 @@ it('creates a ticket with a valid inputs', async () => {
     tickets = await Ticket.find({});
     expect(tickets.length).toEqual(1);
     expect(tickets[0].price).toEqual(20);
-    expect(tickets[0].title).toEqual(tittle);
+    expect(tickets[0].title).toEqual(title);
+});
+
+it('publishes an event', async () => {
+    const title = 'fjnndjk';
+
+    await request(app)
+        .post('/api/tickets')
+        .set('Cookie', signin())
+        .send({
+            title: title,
+            price: 20
+        })
+        .expect(201);
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 })

@@ -1,0 +1,3 @@
+npm install react-stripe-checkout
+
+npm install prop-types

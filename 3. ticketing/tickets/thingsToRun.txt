@@ -1,0 +1,5 @@
+npm update @ser0710_tic/common
+
+npm install node-nats-streaming
+
+npm install mongoose-update-if-current

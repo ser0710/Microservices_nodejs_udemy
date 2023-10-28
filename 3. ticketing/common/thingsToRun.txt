@@ -1,0 +1,2 @@
+npm install node-nats-streaming
+npm run pub

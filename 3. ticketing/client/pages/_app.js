@@ -7,7 +7,10 @@ const styles = ({ Component, pageProps, currentUser }) => {
     return(
         <div>
             <Header currentUser={currentUser}/>
-            <Component {...pageProps} />
+            <div className='container'>
+                <Component currentUser={currentUser} {...pageProps} />
+            </div>
+            
         </div>
         
     ) 
@@ -18,7 +21,7 @@ styles.getInitialProps = async context => { // putting this here makes that the 
     const { data } = await client.get('/api/users/currentuser');
     let pageProps = {};
     if(context.Component.getInitialProps){
-        pageProps = await context.Component.getInitialProps(context.ctx); // call the other getInitialProps from the different components
+        pageProps = await context.Component.getInitialProps(context.ctx, client, data.currentUser); // call the other getInitialProps from the different components
     }
     
 

@@ -3,8 +3,10 @@ import { Ticket } from '../modules/ticket';
 
 const router = express.Router();
 
-router.get('/api/tickets',async () => {
-    const tickets = await Ticket.find({});
+router.get('/api/tickets',async (req: Request, res: Response) => {
+    const tickets = await Ticket.find({
+        orderId: undefined
+    });
 
     res.send(tickets);
 })
